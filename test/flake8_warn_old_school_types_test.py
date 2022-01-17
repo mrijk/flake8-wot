@@ -34,9 +34,51 @@ def test_generic_import_with_class_decl():
     code = """
 import typing
 
-
 class Foo:
     l: typing.List[int]
 """
 
-    assert _results(code) == {"6:5 WOT002 don't use type typing.List"}
+    assert _results(code) == {"5:5 WOT002 don't use type typing.List"}
+
+
+def test_generic_import_with_class_assign():
+    code = """
+import typing
+
+foo = typing.List
+"""
+
+    assert _results(code) == {"4:1 WOT002 don't use type typing.List"}
+
+
+def test_generic_import_with_function_decl_return():
+    code = """
+import typing
+
+def foo() -> typing.List:
+    return []
+"""
+
+    assert _results(code) == {"4:1 WOT002 don't use type typing.List"}
+
+
+def test_generic_import_with_function_decl_args():
+    code = """
+import typing
+
+
+def foo(l: typing.List):
+    return l
+"""
+
+    assert _results(code) == {"5:1 WOT002 don't use type typing.List"}
+
+
+def test_generic_import_with_function_call():
+    code = """
+import typing
+
+print(typing.List)
+"""
+
+    assert _results(code) == {"4:1 WOT002 don't use type typing.List"}
