@@ -36,11 +36,15 @@ class Plugin:
     def __init__(self, tree: AST) -> None:
         self._tree = tree
 
-    def run(self) -> Generator[tuple[int, int, str, type[Any]], None, None]:
-        visitor = Visitor()
-        visitor.visit(self._tree)
+    def _report(self, visitor: Visitor) -> Generator[tuple[int, int, str, type[Any]], None, None]:
         for line, col, old_type in visitor.problems_001:
             yield line, col, f"WOT001 don't import type {old_type}", type(self)
         for line, col, old_type in visitor.problems_002:
             yield line, col, f"WOT002 don't use type typing.{old_type}", type(self)
+
+    def run(self) -> Generator[tuple[int, int, str, type[Any]], None, None]:
+        visitor = Visitor()
+        visitor.visit(self._tree)
+        return self._report(visitor)
+
 
