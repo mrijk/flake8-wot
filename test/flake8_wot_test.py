@@ -1,6 +1,6 @@
 import ast
 
-from flake8_warn_old_school_types import Plugin
+from flake8_wot import Plugin
 
 
 def _results(s: str) -> set[str]:
